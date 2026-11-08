@@ -2,6 +2,16 @@
 
 遵循语义化版本：修 bug → patch，新增能力 → minor，改变契约 → major。
 
+## v1.3.18 — 2026-11-08
+
+影响面：memo-txt(SKILL.md, README.md, CHANGELOG.md, references/cli-contract.md, scripts/cli.py, scripts/test_cli.py)
+
+### 新增
+
+- 增加稳定 CLI：`lint` / `finalize` / `guide` 统一入口，不再临时拼 TXT 容器或另写校验器。
+- 增加 CLI 契约与 2 项调度测试；原有 `lint_txt.py` / `finalize_txt.py` / `import_guide.py` 作为实现细节保留。
+- 交付说明继续要求原样使用 `finalize` 输出，不手写教程替代。
+
 ## v1.3.17 — 2026-11-04
 
 影响面：memo-txt(技能名称、调用示例与系列引用) / memo-ankigo / memo-txt

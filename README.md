@@ -6,6 +6,18 @@
 
 调用名：`$memo-txt`。版本以 [SKILL.md](SKILL.md) 的 `metadata.version` 和 [version.json](version.json) 为准。
 
+## 稳定 CLI
+
+不再手写 TXT 容器或另写校验器：
+
+```text
+python -B scripts/cli.py lint <TXT> [--require-answer-line]
+python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-line]
+python -B scripts/cli.py guide
+```
+
+完整退出码与边界见 [references/cli-contract.md](references/cli-contract.md)。
+
 ## 核心格式
 
 | 标记 | 含义 |

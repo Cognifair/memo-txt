@@ -2,10 +2,10 @@
 name: memo-txt
 description: 墨记文档导入 Memo-TXT，制作、整理和校验墨墨记忆卡 TXT 导入文档的文件格式，重点是牌组信息、### 章节、=== 分卡及 --- 答案线；也负责「TXT 先导入、图片后回填」这条混合路线：卡片走 TXT，表格/配图由 memo-canvas 生成 PNG，导入完成后再用官方 OpenAPI 把图片绑定回卡片。用户说 Memo-TXT、墨记文档导入、按样本生成导入 TXT、修复分卡和章节，或 TXT 交付后要补图片时使用。不负责知识拆解、题型或卡片正文标签语法，不操作客户端导入；完整制卡走 memo-cardest。
 metadata:
-  version: "1.3.17"
+  version: "1.3.18"
 ---
 
-# 墨记文档导入 Memo-TXT v1.3.17
+# 墨记文档导入 Memo-TXT v1.3.18
 
 ## 可选支链与更新框架
 
@@ -19,6 +19,18 @@ metadata:
 
 
 调用名为 `$memo-txt`。本技能记住的是**多张卡片组成一份 TXT 的文件容器格式**，不是卡片内部的题型与标签语法。版本以 frontmatter 的 `metadata.version` 为准。
+
+## 只允许稳定 CLI
+
+不要临时手写 TXT 容器或另写校验器。统一入口：
+
+```text
+python -B scripts/cli.py lint <TXT> [--require-answer-line]
+python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-line]
+python -B scripts/cli.py guide
+```
+
+命令、退出码和边界见 [references/cli-contract.md](references/cli-contract.md)。`lint`/`finalize` 失败退出 1，不能绕过；`guide` 只输出教程。
 
 ## 职责与输入
 
@@ -41,7 +53,7 @@ metadata:
 3. 点右上角「批量制卡」→「从文本导入」。
 4. 把 TXT 内容粘贴到文本框，点右上角「导入」；保持 `###` / `===` / `---` 默认，先看右侧预览。
 
-需要图文/动图时，运行 `python -B scripts/import_guide.py`，把输出原样发给用户：脚本会把 GIF 复制到当前工作区 `memo-txt-import.gif`，并打印四步 + 相对路径图片。**在用户工作目录运行，不要 `cd` 到技能目录**；否则图片落在技能目录，客户端无法预览。不要只给 `import-guide.md` 链接；HTML 只在客户端不支持本地图片时兜底。截图只指示按钮位置，界面以用户当前客户端为准。不要声称代用户导入，也不要把“导入成功”当成格式已验证。
+需要图文/动图时，运行 `python -B scripts/cli.py guide`，把输出原样发给用户：脚本会把 GIF 复制到当前工作区 `memo-txt-import.gif`，并打印四步 + 相对路径图片。**在用户工作目录运行，不要 `cd` 到技能目录**；否则图片落在技能目录，客户端无法预览。不要只给 `import-guide.md` 链接；HTML 只在客户端不支持本地图片时兜底。截图只指示按钮位置，界面以用户当前客户端为准。不要声称代用户导入，也不要把“导入成功”当成格式已验证。
 
 ## 文件格式：先读再封装
 
@@ -55,7 +67,7 @@ metadata:
 4. 运行下述只读结构校验并核对预期的章节、卡片总数及每章数量；修复后重新校验。不能只看进程退出码：须检查 warnings 并说明未覆盖的情况。
 
 ```text
-python scripts/lint_txt.py <实际TXT路径>
+python -B scripts/cli.py lint <实际TXT路径>
 ```
 
 脚本路径相对于本技能目录。无系统 Python 时可用可用的工作区 Python 运行时；不要为此自动安装依赖。脚本只用标准库，不修改输入文件。常规问答要求每卡恰有一条答案线时可加 `--require-answer-line`；默认对缺失或多条答案线发出警告，不把特殊题型误判成普遍无效。脚本不检查卡片标签内部语法或知识正确性。
@@ -82,14 +94,14 @@ python scripts/lint_txt.py <实际TXT路径>
 每次交付 `.txt`（含“只生成 TXT”和“先导入、后回填”两种路线），必须先运行：
 
 ```text
-python -B scripts/finalize_txt.py <TXT> [--member pro|free] [--require-answer-line]
+python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-line]
 ```
 
 把脚本输出**原样**附在消息末尾；它已包含四步、GIF 绝对路径、平台上限与本次硬/软上限、结构检查结果和 `交付自检：导入教程已附`。未指定 `--member` 时按非专业版校验。
 
 - **按普通 Markdown 粘贴，不要用 ``` 代码块包住**；`![TXT 导入流程](...)` 必须作为图片语法渲染，否则 GIF 只会显示成一行文字。
 - 不要手写教程替代脚本输出，也不要只给 `references/import-guide.md` 链接。
-- 脚本会先跑 `lint_txt.py`；校验失败会退出 1，修好再交付，不能绕过。
+- CLI 会先跑 `lint`；校验失败会退出 1，修好再交付，不能绕过。
 - 客户端不能显示本地图片时，保留脚本输出的文字和 GIF 路径。
 - 教程只放在回复里，不写进 TXT 或卡片正文。
 - 用户明确说“不用教程”时才省略，并说明这次省略了。
