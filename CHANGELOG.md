@@ -2,6 +2,13 @@
 
 遵循语义化版本：修 bug → patch，新增能力 → minor，改变契约 → major。
 
+## v1.4.0 — 2026-11-24
+
+影响面：memo-txt(SKILL.md, README.md, CHANGELOG.md, agents/openai.yaml, version.json, references/cli-contract.md, references/web-media.md, scripts/cli.py, scripts/web_media.py, scripts/test_cli.py, scripts/test_web_media.py)
+
+- 新增 `web-media`：走官网 APKG 导入、含语法 TXT 导出和图片／音频引用回填，不调用 OpenAPI。
+- 默认只预览目标 TXT；明确使用 `--commit` 才提交，提交结果不确定时不重试。原有离线 TXT 命令及 OpenAPI 图片回填不变。
+
 ## v1.3.18 — 2026-11-08
 
 影响面：memo-txt(SKILL.md, README.md, CHANGELOG.md, references/cli-contract.md, scripts/cli.py, scripts/test_cli.py)

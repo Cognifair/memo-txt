@@ -1,11 +1,11 @@
 ---
 name: memo-txt
-description: 墨记文档导入 Memo-TXT，制作、整理和校验墨墨记忆卡 TXT 导入文档的文件格式，重点是牌组信息、### 章节、=== 分卡及 --- 答案线；也负责「TXT 先导入、图片后回填」这条混合路线：卡片走 TXT，表格/配图由 memo-canvas 生成 PNG，导入完成后再用官方 OpenAPI 把图片绑定回卡片。用户说 Memo-TXT、墨记文档导入、按样本生成导入 TXT、修复分卡和章节，或 TXT 交付后要补图片时使用。不负责知识拆解、题型或卡片正文标签语法，不操作客户端导入；完整制卡走 memo-cardest。
+description: 墨记文档导入 Memo-TXT，制作和校验墨墨记忆卡 TXT 牌组、章节、分卡和答案线；支持官方 OpenAPI 图片后回填，以及用 Playwright 走官网原生 APKG 导入、保留语法的 TXT 导出、图片或音频引用回填和 TXT 导入；TXT 本身不带媒体，图片与音频通过官网 APKG 导入补齐。用于墨记文档导入、TXT 格式修复、媒体回填或 APKG 中转。知识拆解和题型设计走 memo-cardest。
 metadata:
-  version: "1.3.18"
+  version: "1.4.0"
 ---
 
-# 墨记文档导入 Memo-TXT v1.3.18
+# 墨记文档导入 Memo-TXT v1.4.0
 
 ## 可选支链与更新框架
 
@@ -28,6 +28,7 @@ metadata:
 python -B scripts/cli.py lint <TXT> [--require-answer-line]
 python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-line]
 python -B scripts/cli.py guide
+python -B scripts/cli.py web-media --help
 ```
 
 命令、退出码和边界见 [references/cli-contract.md](references/cli-contract.md)。`lint`/`finalize` 失败退出 1，不能绕过；`guide` 只输出教程。
@@ -43,6 +44,7 @@ python -B scripts/cli.py guide
   等用户导入完成后再用官方 OpenAPI 把图片绑定回卡片。步骤、坑与验收见
   [references/image-backfill.md](references/image-backfill.md)，本技能的 API 调用仅限这条流程内的
   文件上传与卡片更新，不扩到其他接口。
+- **明确要求 APKG 中转、无 OpenAPI 媒体回填或官网导入导出自动化**：先读 [references/web-media.md](references/web-media.md)，调用 `web-media`。它复用官网生成的真实媒体标签，不负责将散图和音频打包。默认只预览目标 TXT；APKG 上传与最终提交分别按用户授权执行。只要本地 TXT 文件时不要启动浏览器，普通 TXT 及 OpenAPI 路线不变。
 
 ## 用户不知道怎么导入时
 
@@ -89,7 +91,7 @@ python -B scripts/cli.py lint <实际TXT路径>
 第一张图；每个资产写入前都要重新读该卡最新正文。完整清单见
 [references/image-backfill.md](references/image-backfill.md)。
 
-## 交付时附导入教程
+## 本地 TXT 交付时附导入教程
 
 每次交付 `.txt`（含“只生成 TXT”和“先导入、后回填”两种路线），必须先运行：
 
@@ -105,7 +107,7 @@ python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-li
 - 客户端不能显示本地图片时，保留脚本输出的文字和 GIF 路径。
 - 教程只放在回复里，不写进 TXT 或卡片正文。
 - 用户明确说“不用教程”时才省略，并说明这次省略了。
-- 不声称代用户导入；导入结果仍由用户自行确认。
+- 仅交付文件时不声称代用户导入；`web-media` 实际线上结果按其参考文档分步报告。
 
 ## 验收与安全边界
 

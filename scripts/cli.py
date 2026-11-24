@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stable Memo-TXT CLI: lint/finalize/guide. No network, no account access."""
+"""Stable Memo-TXT CLI: offline lint/finalize/guide, opt-in web-media."""
 import argparse
 import subprocess
 import sys
@@ -14,6 +14,9 @@ def run(script, args):
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "web-media":
+        return run("web_media.py", argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="action", required=True)
 
@@ -27,6 +30,7 @@ def main(argv=None):
     finalize.add_argument("--require-answer-line", action="store_true")
 
     commands.add_parser("guide", help="print import tutorial and copy GIF to CWD")
+    commands.add_parser("web-media", help="opt-in Markji browser media round trip")
 
     args = parser.parse_args(argv)
     if args.action == "lint":

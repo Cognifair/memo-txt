@@ -10,6 +10,11 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CliTests(unittest.TestCase):
+    def test_web_media_passes_opt_in_arguments_to_separate_script(self):
+        with patch.object(MODULE, "run", return_value=0) as run:
+            self.assertEqual(MODULE.main(["web-media", "--profile", "p", "run", "--commit"]), 0)
+        run.assert_called_once_with("web_media.py", ["--profile", "p", "run", "--commit"])
+
     def test_lint_dispatches(self):
         with patch.object(MODULE, "run", return_value=0) as run:
             self.assertEqual(MODULE.main(["lint", "x.txt", "--require-answer-line"]), 0)

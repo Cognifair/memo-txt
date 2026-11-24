@@ -2,7 +2,7 @@
 
 > 🌐 [墨卡大师 · 专业制卡工作流](https://moka-master.app.workbuddy.host/?sharecode=ZYHGDS4GEB)
 
-专注墨墨记忆卡（Markji）TXT 导入文档的文件容器格式：把已有卡片正文按牌组和章节组织为可交付的 UTF-8 TXT，并检查章节、分卡符与答案线；也负责「TXT 先导入、图片后回填」这条混合路线。
+专注墨墨记忆卡（Markji）TXT 导入文档：组织 UTF-8 TXT、校验章节与分卡；也支持 OpenAPI 图片后回填，以及官网 APKG 中转后用 TXT 复用图片和音频引用。
 
 调用名：`$memo-txt`。版本以 [SKILL.md](SKILL.md) 的 `metadata.version` 和 [version.json](version.json) 为准。
 
@@ -14,6 +14,7 @@
 python -B scripts/cli.py lint <TXT> [--require-answer-line]
 python -B scripts/cli.py finalize <TXT> [--member pro|free] [--require-answer-line]
 python -B scripts/cli.py guide
+python -B scripts/cli.py web-media --help
 ```
 
 完整退出码与边界见 [references/cli-contract.md](references/cli-contract.md)。
@@ -63,6 +64,11 @@ H2O
 细节、接口与已踩过的坑（尤其是「一卡多图必须每次重读最新正文，否则后写覆盖前写」）见
 [references/image-backfill.md](references/image-backfill.md)。
 
+## 官网 APKG 中转
+
+用 Playwright 走官网导入 APKG、导出保留语法的 TXT，再按编号把图片和音频引用写进目标 TXT。默认只预览目标牌组，明确使用 `--commit` 才提交。
+依赖、命令与验收边界见 [references/web-media.md](references/web-media.md)。
+
 ## 能做什么
 
 - 将现成的卡片正文、题面与答案列表、章节映射组织成导入文档。
@@ -103,11 +109,11 @@ python -B scripts/test_check_updates.py
 
 ## 使用边界与更新框架
 
-文件格式来自经整理的用户样本，不代表所有客户端版本都已验证。交付后仍需使用者先少量试导入；不自动上传卡片、不操作客户端导入、不保证覆盖原卡或保留旧 ID、链接和学习进度。图片回填只在用户导入完成并明确要求后执行，且只替换 TXT 里已有的占位标记。
+文件格式来自经整理的用户样本，不代表所有客户端版本都已验证。普通 TXT 交付不操作账号，不保证覆盖原卡或保留旧 ID、链接和学习进度。线上操作只发生在用户明确选择并授权的路线中。
 
 附带本地可选扩展识别与授权后启动同步。清单已配置 GitHub 仓库与 `version.json`，授权后可 fetch 并快进更新，不执行远端代码；自动检查默认关闭。详见 [references/satellite-framework.md](references/satellite-framework.md) 和 [references/satellites.md](references/satellites.md)。
 
-**图片回填不是纯离线交付**：自动回填需要官方 API 凭证，并对上传/写入单独授权。选择 TXT 不等于已授权回填；没有 API 条件时，只交付 PNG 与“手工插入”说明。
+**OpenAPI 图片后回填不是纯离线交付**：该路线需要官方 API 凭证和上传/写入授权。官网 APKG 路线不用 API 凭证，但使用用户自己登录的网页会话。
 
 ## Memo 系列
 
