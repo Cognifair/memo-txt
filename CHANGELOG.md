@@ -2,6 +2,14 @@
 
 遵循语义化版本：修 bug → patch，新增能力 → minor，改变契约 → major。
 
+## v1.4.1 — 2026-11-25
+
+影响面：memo-txt(SKILL.md, CHANGELOG.md, version.json, agents/openai.yaml)
+
+### 修复
+
+- 修正技能描述，去掉与当前 web-media 路线冲突的旧说明。
+
 ## v1.4.0 — 2026-11-24
 
 影响面：memo-txt(SKILL.md, README.md, CHANGELOG.md, agents/openai.yaml, version.json, references/cli-contract.md, references/web-media.md, scripts/cli.py, scripts/web_media.py, scripts/test_cli.py, scripts/test_web_media.py)

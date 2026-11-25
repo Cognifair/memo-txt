@@ -1,11 +1,11 @@
 ---
 name: memo-txt
-description: 墨记文档导入 Memo-TXT，制作和校验墨墨记忆卡 TXT 牌组、章节、分卡和答案线；支持官方 OpenAPI 图片后回填，以及用 Playwright 走官网原生 APKG 导入、保留语法的 TXT 导出、图片或音频引用回填和 TXT 导入；TXT 本身不带媒体，图片与音频通过官网 APKG 导入补齐。用于墨记文档导入、TXT 格式修复、媒体回填或 APKG 中转。知识拆解和题型设计走 memo-cardest。
+description: 墨记文档导入 Memo-TXT，制作和校验墨墨记忆卡 TXT 牌组、章节、分卡和答案线；支持官方 OpenAPI 图片后回填，以及用 Playwright 走官网原生 APKG 导入、保留语法的 TXT 导出、图片或音频引用回填和 TXT 导入。用于墨记文档导入、TXT 格式修复、媒体回填或 APKG 中转。知识拆解和题型设计走 memo-cardest。
 metadata:
-  version: "1.4.0"
+  version: "1.4.1"
 ---
 
-# 墨记文档导入 Memo-TXT v1.4.0
+# 墨记文档导入 Memo-TXT v1.4.1
 
 ## 可选支链与更新框架
 
